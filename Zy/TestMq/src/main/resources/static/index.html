@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TestMq</title>
+    <!--vue-->
+    <script src="https://cdn.staticfile.org/vue/2.7.10/vue.min.js"></script>
+    <!-- element-ui -->
+    <link href="https://cdn.staticfile.org/element-ui/2.15.13/theme-chalk/index.min.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/element-ui/2.15.13/index.min.js"></script>
+    <!--axios-->
+    <script src="https://cdn.staticfile.org/axios/1.4.0/axios.min.js"></script>
+</head>
+<body>
+<div id="app">
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span>实现邮件发送</span>
+        </div>
+        <div class="text item">
+            <el-form :inline="true" :model="emailForm" ref="emailForm">
+                <el-form-item label="收件人">
+                    <el-input v-model="emailForm.email" prop="email"></el-input>
+                </el-form-item>
+                <el-form-item label="主题">
+                    <el-input v-model="emailForm.subject" prop="subject"></el-input>
+                </el-form-item>
+                <el-form-item label="内容">
+                    <el-input type="textarea" v-model="emailForm.text" prop="text"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitEmailForm">发送邮件</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+    </el-card>
+    <el-card class="box-card">
+        <div slot="header" class="clearfix">
+            <span>实现消息延迟</span>
+        </div>
+        <div class="text item">
+            <el-form :inline="true" :model="msgForm" ref="msgForm">
+                <el-form-item label="内容">
+                    <el-input type="textarea" v-model="msgForm.text" prop="text"></el-input>
+                </el-form-item>
+                <el-form-item>
+                    <el-button type="primary" @click="submitMsg">发送消息</el-button>
+                </el-form-item>
+            </el-form>
+        </div>
+    </el-card>
+</div>
+</body>
+<script>
+    let appVue = new Vue({
+        el: '#app',
+        data() {
+            return {
+                emailForm: {},
+                msgForm: {}
+            }
+        },
+        methods: {
+            submitEmailForm() {
+                axios.postForm("/sendEmail", this.emailForm).then(response => {
+                    this.$message.info(response.data)
+                    this.emailForm = {}
+                })
+            },
+            submitMsg() {
+                axios.get("/delayMsg?msg=" + this.msgForm.text).then(response => {
+                    this.$message.info(response.data)
+                    this.msgForm = {}
+                })
+            },
+        }
+    })
+</script>
+</html>

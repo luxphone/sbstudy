@@ -1,0 +1,25 @@
+server:
+  port: 8080
+spring:
+  mail:
+    host: smtp.ifl.ee
+    username: zy@ifl.ee
+    password: 
+    default-encoding: utf-8
+    port: 465
+    properties:
+      mail:
+        debug: true
+        smtp:
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: guest
+    password: guest
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    listener:
+      simple:
+        acknowledge-mode: manual

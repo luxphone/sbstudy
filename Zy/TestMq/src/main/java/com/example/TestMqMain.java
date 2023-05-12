@@ -1,13 +1,11 @@
-package com.example.sbstudy;
+package com.example;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SbStudyApplication {
-
+public class TestMqMain {
     public static void main(String[] args) {
-        SpringApplication.run(SbStudyApplication.class, args);
+        SpringApplication.run(TestMqMain.class, args);
     }
-
 }
