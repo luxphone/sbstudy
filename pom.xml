@@ -8,6 +8,7 @@
     <version>0.0.1-SNAPSHOT</version>
     <modules>
         <module>Zy/TestMq</module>
+        <module>Zy/TestSeparation/backend</module>
     </modules>
     <name>SbStudy</name>
     <description>SbStudy</description>
@@ -21,6 +22,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <mybatis-flex.version>1.2.3</mybatis-flex.version>
+        <HikariCP.version>4.0.3</HikariCP.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -28,6 +30,16 @@
                 <groupId>com.mybatis-flex</groupId>
                 <artifactId>mybatis-flex-spring-boot-starter</artifactId>
                 <version>${mybatis-flex.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.mybatis-flex</groupId>
+                <artifactId>mybatis-flex-codegen</artifactId>
+                <version>${mybatis-flex.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.zaxxer</groupId>
+                <artifactId>HikariCP</artifactId>
+                <version>${HikariCP.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
