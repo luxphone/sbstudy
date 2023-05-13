@@ -39,7 +39,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="addFormVisible=false">取 消</el-button>
+          <el-button @click="closeAddForm('addForm')">取 消</el-button>
           <el-button type="primary" @click="submitAddForm('addForm')">确 定</el-button>
         </div>
       </el-dialog>
@@ -53,7 +53,7 @@
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
-          <el-button @click="updateFormVisible=false">取 消</el-button>
+          <el-button @click="closeUpdateForm('updateForm')">取 消</el-button>
           <el-button type="primary" @click="submitUpdateForm('updateForm')">确 定</el-button>
         </div>
       </el-dialog>
@@ -103,26 +103,27 @@ export default {
           .then(response => {
             if (response.data.code === 200) {
               this.pageData = response.data.data
-              this.booktypeList = response.data.data.records;
+              this.booktypeList = response.data.data.records
             } else {
               this.$message.error(response.data.message)
             }
           })
     },
     handleSizeChange(size) {
-      this.pageData.pageNumber = 1;
-      this.pageData.pageSize = size;
+      this.pageData.pageNumber = 1
+      this.pageData.pageSize = size
       this.initBooktypeList();
     },
     handleCurrentChange(current) {
       this.pageData.pageNumber = current;
       this.initBooktypeList();
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields();
-    },
     showAddForm() {
       this.addFormVisible = true
+    },
+    closeAddForm(formName) {
+      this.addFormVisible=false
+      this.$refs[formName].resetFields()
     },
     submitAddForm(formName) {
       this.$refs[formName].validate((valid) => {
@@ -132,7 +133,8 @@ export default {
                 if (response.data.code === 200) {
                   this.$message.success("添加成功")
                   this.addFormVisible = false
-                  this.initBooktypeList();
+                  this.addBooktype = {}
+                  this.initBooktypeList()
                 }
               })
         }
@@ -142,6 +144,10 @@ export default {
       this.updateBooktype = booktype
       this.updateFormVisible = true
     },
+    closeUpdateForm(formName){
+      this.updateFormVisible = false
+      this.$refs[formName].resetFields()
+    },
     submitUpdateForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -150,7 +156,8 @@ export default {
                 if (response.data.code === 200) {
                   this.$message.success("修改成功")
                   this.updateFormVisible = false
-                  this.initBooktypeList();
+                  this.updateBooktype = {}
+                  this.initBooktypeList()
                 }else {
                   this.$message.error(response.data.message)
                 }
@@ -179,7 +186,7 @@ export default {
     }
   },
   created() {
-    this.initBooktypeList();
+    this.initBooktypeList()
   }
 
 }
