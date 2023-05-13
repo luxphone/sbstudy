@@ -1,0 +1,28 @@
+写下实现以下每一步操作的命令
+ 1.以root用户登录,创建目录 /0513Lab 并进入该目录
+ 2.拷贝 /etc/ntp.conf 到当前目录为 myntp.conf
+ 3.复制 myntp.conf 为 yourntp.pdf
+ 4.压缩 myntp.conf 和 yourntp.pdf 为压缩包 ntp.tar.gz
+ 5.删除 myntp.conf 和 yourntp.pdf
+ 6.解压 ntp.tar.gz
+ 7. 创建多级目录 a/b/c/d/e
+ 8.移动ntp.tar.gz到目录d中
+ 9.创建用户 jiangziya
+ 10.修改yourntp.pdf的属主和属组均为jiangziya
+ 11.修改myntp.conf权限为 属主rwx 属组r-x 其它人r--
+ 12.新建 readMe.txt 文件,并写入任意内容后保存并退出
+ 13.一次性删除 /0513Lab 目录
+
+mkdir 0513Lab && cd 0513Lab
+cp -f /etc/ntp.conf myntp.conf
+cp -f myntp.conf yourntp.pdf
+tar zcvf ntp.tar.gz myntp.conf yourntp.pdf
+rm -f *ntp*f
+tar zxvf ntp.tar.gz
+mkdir -p a/b/c/d/e
+mv ntp.tar.gz a/b/c/d/
+useradd jiangziya
+chown jiangziya:jiangziya yourntp.pdf
+chmod 754 myntp.conf
+touch readMe.txt && echo '1' > readMe.txt
+rm -rf ~/0513Lab
