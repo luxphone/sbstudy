@@ -26,15 +26,19 @@ public class BooktypeController {
 
     @PostMapping("/query")
     public Result<Page<Booktype>> query(Integer pageNumber, Integer pageSize, String keyword) {
+        if (keyword == null) {
+            keyword = "";
+        }
         ValueOperations<String, Object> opsForValue = stringObjectRedisTemplate.opsForValue();
-        Object redisValue = opsForValue.get("booktypePage");
+        String cacheKey = "booktypePage" + ":" + pageNumber + ":" + pageSize + ":" + keyword;
+        Object redisValue = opsForValue.get(cacheKey);
         Page<Booktype> booktypePage;
         if (redisValue == null) {
             Page<Booktype> page = new Page<>(pageNumber, pageSize);
             QueryWrapper query = new QueryWrapper();
-            query.where(BOOKTYPE.NAME.like(keyword == null ? "" : keyword));
+            query.where(BOOKTYPE.NAME.like(keyword));
             booktypePage = booktypeService.page(page, query);
-            opsForValue.set("booktypePage", booktypePage, 1, TimeUnit.HOURS);
+            opsForValue.set(cacheKey, redisValue, 1, TimeUnit.HOURS);
         } else {
             booktypePage = (Page<Booktype>) redisValue;
         }
