@@ -6,12 +6,15 @@ import com.example.service.BooktypeService;
 import com.mybatisflex.core.paginate.Page;
 import com.mybatisflex.core.query.QueryWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.*;
+import redis.clients.jedis.Jedis;
 
 import java.sql.Timestamp;
 import java.util.Date;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static com.example.entity.table.Tables.BOOKTYPE;
@@ -37,7 +40,7 @@ public class BooktypeController {
             Page<Booktype> page = new Page<>(pageNumber, pageSize);
             QueryWrapper query = new QueryWrapper();
             query.where(BOOKTYPE.NAME.like(keyword));
-            booktypePage = booktypeService.page(page, query);
+            redisValue = booktypePage = booktypeService.page(page, query);
             opsForValue.set(cacheKey, redisValue, 1, TimeUnit.HOURS);
         } else {
             booktypePage = (Page<Booktype>) redisValue;
@@ -47,7 +50,7 @@ public class BooktypeController {
 
     @PostMapping("/add")
     public Result<String> add(Booktype booktype) {
-        stringObjectRedisTemplate.delete("booktypePage");
+        removeBooktypePageCache();
         booktype.setCreatetime(new Timestamp(new Date().getTime()));
         booktype.setUpdatetime(new Timestamp(new Date().getTime()));
         booktypeService.save(booktype);
@@ -56,17 +59,26 @@ public class BooktypeController {
 
     @DeleteMapping("/delete/{id}")
     public Result<String> delete(@PathVariable Integer id) {
-        stringObjectRedisTemplate.delete("booktypePage");
+        removeBooktypePageCache();
         booktypeService.removeById(id);
         return Result.success("deleted");
     }
 
     @PostMapping("/update")
     public Result<String> update(Booktype booktype) {
-        stringObjectRedisTemplate.delete("booktypePage");
+        removeBooktypePageCache();
         booktype.setUpdatetime(new Timestamp(new Date().getTime()));
         booktypeService.updateById(booktype);
         return Result.success("updated");
+    }
+
+    private void removeBooktypePageCache() {
+        Jedis jedis = new Jedis("localhost", 6379);
+        Set<String> keys = jedis.keys("booktypePage*");
+        for (String key : keys) {
+            jedis.del(key);
+        }
+        jedis.close();
     }
 
 }
